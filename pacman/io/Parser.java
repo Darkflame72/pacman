@@ -17,7 +17,7 @@ import pacman.events.PlayerMove.Direction;
  */
 public class Parser {
 	private String text; // text to be processed
-	private int index;  // position into text
+	private int index; // position into text
 
 	/**
 	 * Construct a new parser for a given input sequence expressed as a textual
@@ -60,21 +60,20 @@ public class Parser {
 	private Event parseEvent() {
 		char moveCharacter = text.charAt(index++);
 		switch (moveCharacter) {
-		case '!':
-			//return new GameOver(true);
-		case '?':
-			//return new GameOver(false);
-			break;
-		case 'U':
-			return new PlayerMove(Direction.UP);
-		case 'D':
-			return new PlayerMove(Direction.DOWN);
-		case 'L':
-			return new PlayerMove(Direction.LEFT);
-		case 'R':
-			return new PlayerMove(Direction.RIGHT);
-		default:
-			syntaxError("unknown event character encountered");
+			case '!':
+				return new GameOver(true);
+			case '?':
+				return new GameOver(false);
+			case 'U':
+				return new PlayerMove(Direction.UP);
+			case 'D':
+				return new PlayerMove(Direction.DOWN);
+			case 'L':
+				return new PlayerMove(Direction.LEFT);
+			case 'R':
+				return new PlayerMove(Direction.RIGHT);
+			default:
+				syntaxError("unknown event character encountered");
 		}
 		return null;
 	}
@@ -90,24 +89,24 @@ public class Parser {
 		int start = 0;
 		int linenum = 0;
 		int col = 0;
-		while(i < text.length()) {
-			if(text.charAt(i) == '\n') {
-				String line = text.substring(start,i);
+		while (i < text.length()) {
+			if (text.charAt(i) == '\n') {
+				String line = text.substring(start, i);
 				lines.add(line);
-				start = i+1;
+				start = i + 1;
 			}
-			if(i == index) {
+			if (i == index) {
 				linenum = lines.size();
 				col = i - start;
 			}
 			i = i + 1;
 		}
 		// finally, process last line
-		String line = text.substring(start,i);
+		String line = text.substring(start, i);
 		lines.add(line);
 		System.err.println(msg);
 		System.err.println(lines.get(linenum));
-		for(i=0;i<col;++i) {
+		for (i = 0; i < col; ++i) {
 			System.err.print(" ");
 		}
 		System.err.println("^\n");

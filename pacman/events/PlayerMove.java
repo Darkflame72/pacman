@@ -28,6 +28,7 @@ public class PlayerMove implements Event {
 		LEFT,
 		RIGHT
 	}
+
 	/**
 	 * Indicates the direction in which the player should move.
 	 */
@@ -39,7 +40,7 @@ public class PlayerMove implements Event {
 	 * @param direction Indicates which direction the player is moving
 	 */
 	public PlayerMove(Direction direction) {
-		this.direction = Direction.UP;
+		this.direction = direction;
 	}
 
 	@Override

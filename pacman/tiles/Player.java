@@ -30,7 +30,12 @@ public class Player implements Tile {
 		// Calculate player's new position
 		Position np = pp.moveWithin(direction, game.getWidth(), game.getHeight());
 		Tile pt = game.getTile(np);
-		if(pt instanceof Dot) {
+
+		// cannot move there
+		if (pt.isObstruction()) {
+			return;
+		}
+		if (pt instanceof Dot) {
 			game.setTile(np, Air.AIR);
 		}
 		game.swapTile(pp, np);

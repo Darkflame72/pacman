@@ -31,26 +31,38 @@ public final class Position {
 	 * direction from a starting point.
 	 *
 	 * @param direction
-	 *            --- Direction to move in
+	 *                  --- Direction to move in
 	 * @return New position in given direction
 	 */
 	public Position moveWithin(Direction direction, int width, int height) {
 		int x = this.x;
 		int y = this.y;
 		switch (direction) {
-		case UP:
-			y += 1;
-			break;
-		case DOWN:
-			y -= 1;
-			break;
-		case RIGHT:
-			x += 1;
-			break;
-		case LEFT:
-			x -= 1;
-			break;
+			case UP:
+				y += 1;
+				break;
+			case DOWN:
+				y -= 1;
+				break;
+			case RIGHT:
+				x += 1;
+				break;
+			case LEFT:
+				x -= 1;
+				break;
 		}
+
+		// Deal with going across the board
+		if (x >= 15 && direction == Direction.RIGHT) {
+			x = 0;
+		} else if (x < 0 && direction == Direction.LEFT) {
+			x = 14;
+		} else if (y >= 8 && direction == Direction.UP) {
+			y = 0;
+		} else if (y < 0 && direction == Direction.DOWN) {
+			y = 7;
+		}
+
 		// Done
 		return new Position(x, y);
 	}

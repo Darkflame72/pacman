@@ -6,6 +6,8 @@ package pacman;
 import static pacman.tiles.Air.AIR;
 
 import pacman.events.Event;
+import pacman.events.GameOver;
+import pacman.io.GameError;
 import pacman.tiles.*;
 import pacman.util.Position;
 
@@ -64,6 +66,7 @@ public class Game {
 
 	/**
 	 * Get the width of the game board.
+	 * 
 	 * @return Board width.
 	 */
 	public int getWidth() {
@@ -84,10 +87,15 @@ public class Game {
 	 * Run this game to produce the final board, whilst also checking each move
 	 * against the rules of Pacman.
 	 */
-	public void run()  {
-		for(int i=0;i!=events.length;++i) {
+	public void run() {
+		for (int i = 0; i != events.length; ++i) {
 			Event move = events[i];
-			move.apply(this);
+			if (dotsExist() || move instanceof GameOver) {
+				System.out.println(move);
+				move.apply(this);
+			} else {
+				throw new GameError("Cannot move as game is over");
+			}
 		}
 	}
 
@@ -108,6 +116,17 @@ public class Game {
 		} else {
 			return board[position.getY()][position.getX()];
 		}
+	}
+
+	public boolean dotsExist() {
+		for (int i = 0; i != width; ++i) {
+			for (int j = 0; j != height; ++j) {
+				if (board[j][i] instanceof Dot) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -156,11 +175,11 @@ public class Game {
 		// Find all sections
 		for (int x = 0; x < width; ++x) {
 			for (int y = 0; y < height; ++y) {
-				Position p = new Position(x,y);
+				Position p = new Position(x, y);
 				// Extract tile at x,y position
 				Tile t = getTile(p);
 				// Check if player
-				if(t instanceof Player) {
+				if (t instanceof Player) {
 					return p;
 				}
 			}
@@ -176,7 +195,7 @@ public class Game {
 	public String toString() {
 		String r = "";
 		for (int i = height - 1; i >= 0; --i) {
-			r += (i%10) + "|";
+			r += (i % 10) + "|";
 			for (int j = 0; j != width; ++j) {
 				Tile p = board[i][j];
 				r += p.toString();
@@ -186,7 +205,7 @@ public class Game {
 		r += "  ";
 		// Do the X-Axis
 		for (int j = 0; j != width; ++j) {
-			r += (j%10);
+			r += (j % 10);
 		}
 		return r;
 	}
@@ -200,11 +219,11 @@ public class Game {
 	public void initialiseBoard(String boardString) {
 		// You don't need to understand this!
 		String[] rows = boardString.split("\n");
-		for(int y=0;y!=height;++y) {
+		for (int y = 0; y != height; ++y) {
 			String row = rows[y];
-			for(int x=0;x!=width;++x) {
-				char c = row.charAt(x+2);
-				board[height-(y+1)][x] = createPieceFromChar(c);
+			for (int x = 0; x != width; ++x) {
+				char c = row.charAt(x + 2);
+				board[height - (y + 1)][x] = createPieceFromChar(c);
 			}
 		}
 	}
@@ -230,25 +249,25 @@ public class Game {
 	 * @return
 	 */
 	private Tile createPieceFromChar(char c) {
-		switch(c) {
-		case ' ':
-			return AIR; // blank space
-		case 'o':
-			return new Player();
-		case '*':
-			break;
-		case '.':
-			return new Dot();
-		case '#':
-			return new Wall();
-		case '^':
-			break;
-		case '>':
-			break;
-		case '<':
-			break;
-		case 'v':
-			break;
+		switch (c) {
+			case ' ':
+				return AIR; // blank space
+			case 'o':
+				return new Player();
+			case '*':
+				break;
+			case '.':
+				return new Dot();
+			case '#':
+				return new Wall();
+			case '^':
+				break;
+			case '>':
+				break;
+			case '<':
+				break;
+			case 'v':
+				break;
 		}
 		throw new IllegalArgumentException("invalid character");
 	}
