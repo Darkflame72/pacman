@@ -5,8 +5,11 @@ package pacman;
 
 import static pacman.tiles.Air.AIR;
 
+import java.util.ArrayList;
+
 import pacman.events.Event;
 import pacman.events.GameOver;
+import pacman.events.PlayerMove.Direction;
 import pacman.io.GameError;
 import pacman.tiles.*;
 import pacman.util.Position;
@@ -91,11 +94,34 @@ public class Game {
 		for (int i = 0; i != events.length; ++i) {
 			Event move = events[i];
 			if (dotsExist() || move instanceof GameOver) {
-				System.out.println(move);
+				// System.out.println(move);
 				move.apply(this);
+				moveGhosts();
 			} else {
 				throw new GameError("Cannot move as game is over");
 			}
+		}
+	}
+
+	/**
+	 * Move all ghosts in the game.
+	 */
+	private void moveGhosts() {
+		// get all ghosts
+		ArrayList<Position> ghosts = new ArrayList<Position>();
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (board[y][x] instanceof Ghost) {
+					ghosts.add(new Position(x, y));
+				}
+			}
+		}
+
+		// move all ghosts
+		for (Position ghost : ghosts) {
+			Ghost g = (Ghost) getTile(ghost);
+			g.move(this, ghost);
+
 		}
 	}
 
@@ -261,13 +287,13 @@ public class Game {
 			case '#':
 				return new Wall();
 			case '^':
-				break;
+				return new Ghost(Direction.UP);
 			case '>':
-				break;
+				return new Ghost(Direction.RIGHT);
 			case '<':
-				break;
+				return new Ghost(Direction.LEFT);
 			case 'v':
-				break;
+				return new Ghost(Direction.DOWN);
 		}
 		throw new IllegalArgumentException("invalid character");
 	}
