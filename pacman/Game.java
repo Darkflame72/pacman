@@ -94,11 +94,12 @@ public class Game {
 		for (int i = 0; i != events.length; ++i) {
 			Event move = events[i];
 			if (dotsExist() || move instanceof GameOver) {
-				// System.out.println(move);
 				move.apply(this);
 			} else {
 				throw new GameError("Cannot move as game is over");
 			}
+
+			// run move ghosts unless game over has been called
 			if (!(move instanceof GameOver)) {
 				moveGhosts();
 			}
@@ -146,12 +147,18 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Check whether there are any dots remaining on the board.
+	 * 
+	 * @return true if there are still dots on the board
+	 */
 	public boolean dotsExist() {
 		for (int i = 0; i != width; ++i) {
 			for (int j = 0; j != height; ++j) {
 				if (board[j][i] instanceof Dot) {
 					return true;
 				}
+				// check for a ghost being over a dot
 				if (board[j][i] instanceof Ghost) {
 					if (((Ghost) board[j][i]).isOnDot()) {
 						return true;

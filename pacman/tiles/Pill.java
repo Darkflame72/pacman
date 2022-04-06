@@ -1,5 +1,11 @@
 package pacman.tiles;
 
+/**
+ * Represents a powerup pill on the board.
+ *
+ * @author Leon J. Bowie
+ *
+ */
 public class Pill implements Tile {
 
     @Override

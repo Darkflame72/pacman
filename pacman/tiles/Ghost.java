@@ -1,7 +1,6 @@
 package pacman.tiles;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import pacman.Game;
 import pacman.events.PlayerMove.Direction;

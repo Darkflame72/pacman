@@ -16,8 +16,18 @@ import pacman.util.Position;
  *
  */
 public class Player implements Tile {
+
+	/**
+	 * Amount of rounds the powerup has left.
+	 * A value of 0 or below means not active.
+	 */
 	private int powerupLeft = 0;
 
+	/**
+	 * If the player has an active powerup ability.
+	 * 
+	 * @return true if the player has an active powerup ability.
+	 */
 	public boolean powerUpActive() {
 		System.out.println(powerupLeft > 0);
 		return powerupLeft > 0;
@@ -37,7 +47,9 @@ public class Player implements Tile {
 	}
 
 	public void move(Game game, Position pp, Direction direction) {
+		// Decrease the powerup timer.
 		powerupLeft--;
+
 		// Calculate player's new position
 		Position np = pp.moveWithin(direction, game.getWidth(), game.getHeight());
 		Tile pt = game.getTile(np);
@@ -46,22 +58,29 @@ public class Player implements Tile {
 		if (pt.isObstruction()) {
 			return;
 		}
+
+		// Deal with Ghost Collisions
 		if (pt instanceof Ghost) {
+			// Eat Ghost if powerup is active otherwise get eaten.
 			if (powerUpActive()) {
-				System.out.println("Eating Ghost");
 				game.setTile(np, Air.AIR);
 			} else {
 				game.setTile(pp, Air.AIR);
 				return;
 			}
 		}
+
+		// Remove dot from the board
 		if (pt instanceof Dot) {
 			game.setTile(np, Air.AIR);
 		}
+
+		// Eat pill and activate powerup
 		if (pt instanceof Pill) {
 			powerupLeft = 6;
 			game.setTile(np, Air.AIR);
 		}
+
 		game.swapTile(pp, np);
 	}
 }
