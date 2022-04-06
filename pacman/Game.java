@@ -96,9 +96,11 @@ public class Game {
 			if (dotsExist() || move instanceof GameOver) {
 				// System.out.println(move);
 				move.apply(this);
-				moveGhosts();
 			} else {
 				throw new GameError("Cannot move as game is over");
+			}
+			if (!(move instanceof GameOver)) {
+				moveGhosts();
 			}
 		}
 	}
@@ -149,6 +151,11 @@ public class Game {
 			for (int j = 0; j != height; ++j) {
 				if (board[j][i] instanceof Dot) {
 					return true;
+				}
+				if (board[j][i] instanceof Ghost) {
+					if (((Ghost) board[j][i]).isOnDot()) {
+						return true;
+					}
 				}
 			}
 		}
@@ -210,7 +217,8 @@ public class Game {
 				}
 			}
 		}
-		throw new IllegalArgumentException("Player not located on the board!");
+		return null;
+		// throw new IllegalArgumentException("Player not located on the board!");
 	}
 
 	/**
@@ -281,7 +289,7 @@ public class Game {
 			case 'o':
 				return new Player();
 			case '*':
-				break;
+				return new Pill();
 			case '.':
 				return new Dot();
 			case '#':

@@ -16,8 +16,18 @@ import pacman.util.Position;
  *
  */
 public class Player implements Tile {
+	private int powerupLeft = 0;
+
+	public boolean powerUpActive() {
+		System.out.println(powerupLeft > 0);
+		return powerupLeft > 0;
+	}
+
 	@Override
 	public String toString() {
+		if (powerUpActive()) {
+			return "O";
+		}
 		return "o";
 	}
 
@@ -27,6 +37,7 @@ public class Player implements Tile {
 	}
 
 	public void move(Game game, Position pp, Direction direction) {
+		powerupLeft--;
 		// Calculate player's new position
 		Position np = pp.moveWithin(direction, game.getWidth(), game.getHeight());
 		Tile pt = game.getTile(np);
@@ -35,7 +46,20 @@ public class Player implements Tile {
 		if (pt.isObstruction()) {
 			return;
 		}
+		if (pt instanceof Ghost) {
+			if (powerUpActive()) {
+				System.out.println("Eating Ghost");
+				game.setTile(np, Air.AIR);
+			} else {
+				game.setTile(pp, Air.AIR);
+				return;
+			}
+		}
 		if (pt instanceof Dot) {
+			game.setTile(np, Air.AIR);
+		}
+		if (pt instanceof Pill) {
+			powerupLeft = 6;
 			game.setTile(np, Air.AIR);
 		}
 		game.swapTile(pp, np);

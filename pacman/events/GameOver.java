@@ -22,10 +22,20 @@ public class GameOver implements Event {
             // correct
             return;
         }
+
         if (!won && game.locatePlayer() == null) {
             // correct
             return;
         }
+
+        // if (!won) {
+        // try {
+        // game.locatePlayer();
+        // } catch (GameError e) {
+        // // correct
+        // return;
+        // }
+        // }
         throw new GameError("Incorrect game over event");
 
     }
