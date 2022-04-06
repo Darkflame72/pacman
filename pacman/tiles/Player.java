@@ -29,7 +29,6 @@ public class Player implements Tile {
 	 * @return true if the player has an active powerup ability.
 	 */
 	public boolean powerUpActive() {
-		System.out.println(powerupLeft > 0);
 		return powerupLeft > 0;
 	}
 
